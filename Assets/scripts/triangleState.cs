@@ -1,98 +1,67 @@
 using UnityEngine;
 
 
-public enum TriangleState { Idle, Active, Completed }
+public enum TriangleState { Active, Locked, Concom, Done }
 
-public class PuzzleTriangle : MonoBehaviour
+
+public class TriangleStateControl : MonoBehaviour
 {
     [Header("Triangle States")]
     public SpriteRenderer sprite;
-    // public Transform overTransform;
-    public TriangleState state = TriangleState.Idle;
+    public TriangleState state = TriangleState.Active;
 
-    public Color idleColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     public Color activeColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    public Color completedColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    public Color lockedColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    public Color concomColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    public Color doneColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     
+    public float startRotation;
+    public float goalRotation;
+    public float CurrentRotation { get; private set; }
 
-    [Header("Rotation (in degrees)")]
-    public float rotationStep = 60f; // degrees per click
-    // public float rotationSpeed = 200f; // smooth rotation speed
-
+    private const float ROTATION_EPSILON = 0.5f;
     
-    // public float idleSpinSpeed = 0.1f; // degrees per second
-
-    private Quaternion targetRotation;
+    
     // private Renderer rend;
-
-
-    public Rigidbody2D body;
-    public Vector2 direction;
-    public float impulse;
-    public Vector2 levelBounds;
-    public int spinAmount;
-    Vector2 startPosition;
 
     void Start()
     {
-        // rend = GetComponent<Renderer>();
-        targetRotation = transform.rotation;
+ 
         UpdateColor();
         SetState(state);
+        SetRotation(startRotation);
 
-        startPosition = transform.position;
-        Reset();
-        body.linearVelocity = direction.normalized * impulse;
-        body.angularVelocity = spinAmount;
-
-        // Randomize idle spin direction and speed slightly
-        // idleSpinSpeed *= Random.Range(0.5f, 1.5f) * (Random.value > 0.5f ? 1 : -1);
+        // on level start, get this triangles start and goal rotations
+        // and apply them.
+        transform.rotation = Quaternion.Euler(0, 0, startRotation);
+        // currentRotation = startRotation;
         
     }
 
     void Update()
     {
-        // Smooth rotation
-        // transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        // when currentRotation == goalRotation;
+        // SetState(TriangleState.Done);
 
-        // Idle spin
-        // if (state == TriangleState.Idle)
-        // {
-        //     transform.Rotate(0, 0, idleSpinSpeed * Time.deltaTime);
-        // }
-
-
-
-        float ballAngle = Vector2.Angle(transform.position, body.linearVelocity);
-        if (ballAngle < 90 &&
-        (transform.position.x < -levelBounds.x ||
-        transform.position.x > levelBounds.x ||
-        transform.position.y < -levelBounds.y ||
-        transform.position.y > levelBounds.y 
-        ))
-        {
-            Reset();
-        }
     }
 
-    public void RotateLeft()
-    {
-        if (state == TriangleState.Idle) SetState(TriangleState.Active);
-
-        targetRotation *= Quaternion.Euler(0, 0, rotationStep);
-    }
-
-    public void RotateRight()
-    {
-        if (state == TriangleState.Idle) SetState(TriangleState.Active);
-
-        targetRotation *= Quaternion.Euler(0, 0, -rotationStep);
-    }
-
+   
     public void SetState(TriangleState newState)
     {
         state = newState;
         UpdateColor();
+    }
+
+    public void SetRotation(float zRotation) {
+        CurrentRotation = Normalize(zRotation);
+        transform.rotation = Quaternion.Euler(0, 0, CurrentRotation);
+    }
+    public float GetGoalRotation() { return Normalize(goalRotation); }
+
+
+    public bool CanRotate()
+    {
+        return state == TriangleState.Active;
     }
 
     private void UpdateColor()
@@ -100,21 +69,25 @@ public class PuzzleTriangle : MonoBehaviour
         
         switch(state)
         {
-            case TriangleState.Idle: sprite.color = idleColor; break;
             case TriangleState.Active: sprite.color = activeColor; break;
-            case TriangleState.Completed: sprite.color = completedColor; break;
+            case TriangleState.Locked: sprite.color = lockedColor; break;
+            case TriangleState.Concom: sprite.color = concomColor; break;
+            case TriangleState.Done: sprite.color = doneColor; break;
         }
     }
 
-    
-
-
-    public void Reset()
+    // changes later, im not sure what exactly the wincon is
+    public bool IsAtGoal()
     {
-        transform.position = startPosition;
-        body.linearVelocity = direction.normalized * impulse;
-
-        // reset score
-        GameManager.instance.score = 0;
+        return Mathf.Abs(
+            Mathf.DeltaAngle(CurrentRotation, GetGoalRotation())
+        ) <= ROTATION_EPSILON;
     }
+    private float Normalize(float angle) // normalizes ze angle
+    {
+        angle %= 360f;
+        if (angle < 0) angle += 360f;
+        return angle;
+    }
+
 }
