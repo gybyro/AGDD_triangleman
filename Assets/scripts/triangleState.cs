@@ -19,7 +19,16 @@ public class TriangleStateControl : MonoBehaviour
     public float goalRotation;
     public float CurrentRotation { get; private set; }
 
+    [Header("Opener triangles")]
+    // to get south,sw and se, just rotate the parent ower by 60 on z
+    public WPivotMover north;
+    public WPivotMover nw;
+    public WPivotMover ne;
+    
+
     private const float ROTATION_EPSILON = 0.5f;
+
+    
     
     
     // private Renderer rend;
@@ -35,6 +44,12 @@ public class TriangleStateControl : MonoBehaviour
         // and apply them.
         transform.rotation = Quaternion.Euler(0, 0, startRotation);
         // currentRotation = startRotation;
+
+        // set openers rotation if aplycaple
+        if (north) north.targetRotationx = 180f;
+        if (nw) { nw.targetRotationy = 180f; nw.targetRotationz = 60f; }
+        if (ne) { ne.targetRotationy = -180f; ne.targetRotationz = 300f; }
+        
         
     }
 
@@ -45,11 +60,20 @@ public class TriangleStateControl : MonoBehaviour
 
     }
 
+    public void SyncRotation() { SetRotation(CurrentRotation); } // currently not being used ===
+
    
     public void SetState(TriangleState newState)
     {
         state = newState;
         UpdateColor();
+
+        if (newState == TriangleState.Done)
+        {
+            north?.PlayFlip();
+            nw?.PlayFlip();
+            ne?.PlayFlip();
+        }
     }
 
     public void SetRotation(float zRotation) {
