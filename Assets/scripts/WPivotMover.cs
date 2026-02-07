@@ -18,7 +18,6 @@ public class WPivotMover : MonoBehaviour
     public float targetRotationy;
     public float targetRotationz;
 
-    private bool hasPlayed = false;
 
     private void Awake()
     {
@@ -29,8 +28,6 @@ public class WPivotMover : MonoBehaviour
     {
         sprite.color = normalColor;
 
-        if (hasPlayed) return;
-        hasPlayed = true;
 
         if (!isRotating)
             StartCoroutine(RotateToTarget());

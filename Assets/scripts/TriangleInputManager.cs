@@ -140,7 +140,8 @@ public class TriangleInputManager : MonoBehaviour
 
         // Check goal
         if (stateControl.IsAtGoal()) {
-            stateControl.SetState(TriangleState.Done);
+            if (stateControl.state == TriangleState.Concom) { stateControl.SetState(TriangleState.ConDone); }
+            else stateControl.SetState(TriangleState.Done);
         }
     }
 }
