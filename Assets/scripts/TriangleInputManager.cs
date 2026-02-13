@@ -85,6 +85,7 @@ public class TriangleInputManager : MonoBehaviour
     private void TryRotate(float delta)
     {
         if (!MouseOverThis()) return;
+        if (GameManager.instance.CurrentState != GameState.Playing) return;
         if (!stateControl.CanRotate()) return;
 
         RotateRequest(delta);

@@ -14,6 +14,9 @@ public class DigitController : MonoBehaviour
     [SerializeField] private int framesPerUpdate = 3;  // how many frames between the flicker
 
 
+    [SerializeField] public bool isStatic = false;
+    [SerializeField] public int staticDigit = 0;
+
     // 0–9 triangle masks
     // true = triangle ON
     private static readonly bool[][] DIGIT_MASKS =
@@ -167,11 +170,27 @@ public class DigitController : MonoBehaviour
 
     private int lastPreviewDigit = -1;
 
+    private void Start()
+    {
+        if (isStatic)
+        {
+            ApplyStaticDigit();
+            return;
+        }
+    }
+    private void ApplyStaticDigit()
+    {
+        ApplyMaskInstant(DIGIT_MASKS[staticDigit]);
+    }
+
+
     // ======================== UPDATE ====================================
     private void Update()
     {
         if (!Application.isPlaying)
             return;
+
+        
 
         if (playModePreviewDigit != lastPreviewDigit)
         {
@@ -298,7 +317,7 @@ public class DigitController : MonoBehaviour
     // }
 
     // ================================== CLEAR =======================================
-     public void ClearInstant()
+    public void ClearInstant()
     {
         foreach (var cell in cells)
             cell.SetVisible(false);

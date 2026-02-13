@@ -1,23 +1,24 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+
 
 
 public class PauseManager : MonoBehaviour
 {
+    public static bool IsPaused { get; private set; }
+
     public CanvasGroup pauseMenuUI;
     public Animator pauseAnimator;
+    public Animator transissionAnimation;
 
-    private bool isPaused;
+
 
 
     void Start()
     {
 
-        isPaused = false;
-        // pauseAnimator.Play("PauseUp_Idle");
-        // pauseAnimator.SetTrigger("Go");
+        IsPaused = false;
 
         pauseMenuUI.alpha = 0;
         pauseMenuUI.blocksRaycasts = false;
@@ -33,8 +34,7 @@ public class PauseManager : MonoBehaviour
         
         pauseAnimator.SetTrigger("Pause");
 
-        Time.timeScale = 0f;
-        isPaused = true;
+        GameManager.instance.SetState(GameState.Paused);
     }
     
     public void Resume() {
@@ -43,8 +43,7 @@ public class PauseManager : MonoBehaviour
         // hide AFTER animation finishes
         StartCoroutine(HideAfterAnim());
 
-        Time.timeScale = 1f;
-        isPaused = false;
+        GameManager.instance.SetState(GameState.Playing);
     }
     private IEnumerator HideAfterAnim() {
         // match animation length
@@ -60,13 +59,52 @@ public class PauseManager : MonoBehaviour
     {
         if (!context.performed) return;   // only trigger once per button push
 
-        if (isPaused) Resume();
+        if (IsPaused) Resume();
         else Pause();
     }
 
+
     public void BackToMainMenu() {
-        Resume();    // unpause first
-        SceneManager.LoadScene("MainMenuScene");
-        Debug.Log("Scene MainMenuScene loaded");
+
+        IsPaused = true;
+        pauseAnimator.SetTrigger("Go");
+        StartCoroutine(HideAfterAnim());
+
+        // Switch to main menu state
+        GameManager.instance.SetState(GameState.MainMenu);
+
+        IsPaused = false;
     }
+
+    // private IEnumerator TransitionToMainMenu()
+    // {
+    //     IsPaused = true;
+
+    //     // Trigger transition animation
+    //     // transissionAnimation.SetTrigger("TransTrigger");
+
+    //     // Keep game paused while transition plays
+    //     // yield return new WaitForSecondsRealtime(2f); // use Realtime so Time.timeScale = 0 doesn't stop it
+
+    //     // Hide pause menu
+    //     pauseMenuUI.alpha = 0;
+    //     pauseMenuUI.blocksRaycasts = false;
+    //     pauseMenuUI.interactable = false;
+
+    //     // Switch to main menu state
+    //     GameManager.instance.SetState(GameState.MainMenu);
+
+    //     // Optional: reset pause flag
+    //     IsPaused = false;
+    // }
+
+
+    public void QuitBTN()
+    {
+        Application.Quit();
+        Debug.Log("Quit called! (This won't close the editor)");
+        
+    }
+
+    
 }
