@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3795437932344149621, guid: fb2b2eba024a541429dad997c415d3e8, type: 3}
+  m_Sprite: {fileID: -7548803057532565390, guid: 4cd2335594abda64a8519d42292513c9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -204,12 +204,10 @@ MonoBehaviour:
   doneColor: {r: 0.5169811, g: 0.5169811, b: 0.5169811, a: 1}
   startRotation: 0
   goalRotation: 0
+  isOpen: 0
   north: {fileID: 6164745447326151622}
   nw: {fileID: 5632723383063555243}
   ne: {fileID: 513675313536983164}
-  south: {fileID: 0}
-  sw: {fileID: 0}
-  se: {fileID: 0}
 --- !u!1 &6652650110351604370
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,7 +27,10 @@ public class PauseManager : MonoBehaviour
         pauseAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
     }
 
-    public void Pause() {        
+    public void Pause() {
+
+        if (GameManager.instance.CurrentState == GameState.MainMenu) return;
+
         pauseMenuUI.alpha = 1;
         pauseMenuUI.blocksRaycasts = true;
         pauseMenuUI.interactable = true;
@@ -69,6 +72,7 @@ public class PauseManager : MonoBehaviour
         IsPaused = true;
         pauseAnimator.SetTrigger("Go");
         StartCoroutine(HideAfterAnim());
+
 
         // Switch to main menu state
         GameManager.instance.SetState(GameState.MainMenu);

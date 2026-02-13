@@ -25,8 +25,18 @@ public class MenuButtons : MonoBehaviour
 
     public void StartGameBTN()
     {
-        Debug.Log("Go to whatever lvl the player is on, curr_player_lvl in GameManager");
-        StartCoroutine(SwitchTo(GameState.Playing));
+        int lvl = GameManager.instance.GetPlayersHighestLevel();
+        StartCoroutine(SwitchToGame(lvl));
+    }
+
+    private IEnumerator SwitchToGame(int lvl)
+    {
+        transissionAnimation.SetTrigger("TransTrigger");
+
+        yield return new WaitForSecondsRealtime(2f);
+
+        GameManager.instance.LoadLevel(lvl);
+        GameManager.instance.SetState(GameState.Playing);
     }
 
 

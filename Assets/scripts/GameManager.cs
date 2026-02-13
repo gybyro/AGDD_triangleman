@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum GameState
 {
@@ -11,8 +12,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public GameState CurrentState { get; private set; }
-
+    
+    [Header("Levels")]
     public int players_highest_lvl;
+    private GameObject currentLevelInstance;
+    
+    [SerializeField] private Transform levelContainer;
+    [SerializeField] private List<GameObject> levelPrefabs;
 
     public GameObject mainMenuRoot;
     public GameObject puzzleRoot;
@@ -29,6 +35,8 @@ public class GameManager : MonoBehaviour
         SetState(GameState.MainMenu);
     }
 
+    // ========== STATES ========================================
+
     public void SetState(GameState newState)
     {
         CurrentState = newState;
@@ -39,6 +47,8 @@ public class GameManager : MonoBehaviour
                 mainMenuRoot.SetActive(true);
                 puzzleRoot.SetActive(false);
                 Time.timeScale = 1f;
+
+                if (currentLevelInstance != null) Destroy(currentLevelInstance);
                 break;
 
             case GameState.Playing:
@@ -51,6 +61,22 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0f;
                 break;
         }
+    }
+
+    // ========== LEVELS ========================================
+
+    public void LoadLevel(int index)
+    {
+        if (currentLevelInstance != null)
+            Destroy(currentLevelInstance);
+
+        if (index < 0 || index >= levelPrefabs.Count)
+        {
+            Debug.LogError("Invalid level index");
+            return;
+        }
+
+        currentLevelInstance = Instantiate(levelPrefabs[index], levelContainer);
     }
 
 
