@@ -11,8 +11,8 @@ public class TriangleInputManager : MonoBehaviour
     [SerializeField] private AnimationCurve rotationCurve;
     
 
-    private TriangleStateControl stateControl;
-    private PolygonCollider2D polyCollider;
+    [SerializeField] private TriangleStateControl stateControl;
+    [SerializeField] private PolygonCollider2D polyCollider;
     public Camera mainCam;
 
     private float targetRotation;

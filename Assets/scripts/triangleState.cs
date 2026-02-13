@@ -3,12 +3,25 @@ using UnityEngine;
 
 public enum TriangleState { Active, Locked, Done, Concom, ConDone }
 
+public enum TriangleCorner
+{
+    A = 0,
+    B = 1,
+    C = 2
+}
+
 
 public class TriangleStateControl : MonoBehaviour
 {
     [Header("Triangle States")]
-    public SpriteRenderer sprite;
+    [SerializeField] private SpriteRenderer mainSpriteRenderer;
+    public SpriteRenderer northRenderer;
+    public SpriteRenderer nwRenderer;
+    public SpriteRenderer neRenderer;
     public TriangleState state = TriangleState.Active;
+
+    [Header("Corner Colours")]
+    public Color[] cornerColors = new Color[3];
 
     public Color activeColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     public Color lockedColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -28,6 +41,14 @@ public class TriangleStateControl : MonoBehaviour
     public WPivotMover ne;
 
     private const float ROTATION_EPSILON = 0.5f;
+
+
+    private void Awake()
+    {
+        if (mainSpriteRenderer == null)
+            mainSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
+
 
     void Start()
     {
@@ -75,6 +96,7 @@ public class TriangleStateControl : MonoBehaviour
         CurrentRotation = Normalize(zRotation);
         transform.rotation = Quaternion.Euler(0, 0, CurrentRotation);
 
+        UpdateOpenerColor();
         OnRotationChanged?.Invoke(this); // tell the world 
     }
     public float GetGoalRotation() { return Normalize(goalRotation); }
@@ -114,15 +136,24 @@ public class TriangleStateControl : MonoBehaviour
         
     }
 
+    public void SetCornerColors(Color c1, Color c2, Color c3)
+    {
+        cornerColors[0] = c1;
+        cornerColors[1] = c2;
+        cornerColors[2] = c3;
+
+        UpdateOpenerColor();
+    }
+
     private void UpdateColor()
     {
         
         switch(state)
         {
-            case TriangleState.Active: sprite.color = activeColor; break;
-            case TriangleState.Locked: sprite.color = lockedColor; break;
-            case TriangleState.Concom: sprite.color = concomColor; break;
-            case TriangleState.Done: sprite.color = doneColor; break;
+            case TriangleState.Active: mainSpriteRenderer.color = activeColor; break;
+            case TriangleState.Locked: mainSpriteRenderer.color = lockedColor; break;
+            case TriangleState.Concom: mainSpriteRenderer.color = concomColor; break;
+            case TriangleState.Done: mainSpriteRenderer.color = doneColor; break;
         }
     }
 
@@ -138,6 +169,30 @@ public class TriangleStateControl : MonoBehaviour
         angle %= 360f;
         if (angle < 0) angle += 360f;
         return angle;
+    }
+
+    public TriangleCorner GetUpCorner()
+    {
+        float rot = Normalize(CurrentRotation);
+
+        // each 120 degrees = next corner
+        int index = Mathf.RoundToInt(rot / 120f) % 3;
+        if (index < 0) index += 3;
+
+        return (TriangleCorner)index;
+    }
+
+    private void UpdateOpenerColor()
+    {
+        if (cornerColors == null || cornerColors.Length < 3)
+            return;
+
+        TriangleCorner up = GetUpCorner();
+        Color c = cornerColors[(int)up];
+
+        if (northRenderer) northRenderer.color = c;
+        if (nwRenderer) nwRenderer.color = c;
+        if (neRenderer) neRenderer.color = c;
     }
 
 }

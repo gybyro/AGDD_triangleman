@@ -85,6 +85,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3473260304136646495}
+  - component: {fileID: 6878683213547880620}
   m_Layer: 0
   m_Name: Level prefab 01
   m_TagString: Untagged
@@ -111,6 +112,31 @@ Transform:
   - {fileID: 374272065728304485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6878683213547880620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5067483068083475191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd46f48e61f521447a4d626aa9f6f2b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelController
+  trianglePrefabs: []
+  triangles:
+  - {fileID: 610062945054900517}
+  - {fileID: 8685364263274854853}
+  - {fileID: 6615261959578894080}
+  - {fileID: 7013465681302490392}
+  - {fileID: 6474014931376570693}
+  - {fileID: 1812170537498579319}
+  - {fileID: 1298614781084121449}
+  - {fileID: 6825285760435236275}
+  color1: {r: 0.7294118, g: 0.3333333, b: 0.8274511, a: 1}
+  color2: {r: 0.4980392, g: 1, b: 0.8313726, a: 1}
+  color3: {r: 1, g: 0.627451, b: 0.4784314, a: 1}
 --- !u!1001 &275958490636263316
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -337,6 +363,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
   m_PrefabInstance: {fileID: 361450864603364383}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7013465681302490392 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 361450864603364383}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!1001 &1748267178361394146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -481,6 +518,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
   m_PrefabInstance: {fileID: 2078526137453234370}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8685364263274854853 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 2078526137453234370}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!1001 &3315969382575670805
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -687,6 +735,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
   m_PrefabInstance: {fileID: 4244850976711466164}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6825285760435236275 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 4244850976711466164}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!1001 &4275433421640096512
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -843,6 +902,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
   m_PrefabInstance: {fileID: 4433976364313079874}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6474014931376570693 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 4433976364313079874}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!1001 &4584336724771458567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -929,6 +999,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
   m_PrefabInstance: {fileID: 4584336724771458567}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6615261959578894080 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 4584336724771458567}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!1001 &6382848018255701554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1134,6 +1215,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+--- !u!114 &610062945054900517 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 7793361788954554402}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!4 &6470153772758750137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
@@ -1220,6 +1312,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+--- !u!114 &1298614781084121449 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 8526843545091983470}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!4 &4879756660161588213 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
@@ -1302,6 +1405,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+--- !u!114 &1812170537498579319 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7228545981906514183, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
+  m_PrefabInstance: {fileID: 9040672533570216048}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e996e579e3f1ca4abb0f9ac82bede8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTriangle
 --- !u!4 &5232026183613809643 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3885779452399805339, guid: e6f9cc24ece59c348a97f6c379b438e1, type: 3}
