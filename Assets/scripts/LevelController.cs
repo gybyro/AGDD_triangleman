@@ -8,68 +8,121 @@ public enum LevelState
     Won,
     Lost
 }
+// public enum PosibleRotations {
+//     d0 = 0,
+//     d60 = 60,
+//     d120 = 120,
+//     d180 = 180,
+//     d240 = 240,
+//     d300 = 300,
+// }
+
+[System.Serializable]
+public class TriangleWinCondition
+{
+    public TriangleStateControl triangle;
+    public PosibleRotations winRotation;
+    public List<PosibleRotations> openAtPos;
+    public TriangleState triangleState;
+}
 
 public class LevelController : MonoBehaviour
 {
     public LevelState CurrentState { get; private set; }
+    public int levelNumber;
 
     [Header("Owers")]
-    [SerializeField] private List<GameObject> trianglePrefabs;
+    public List<TriangleWinCondition> winConditions;
 
-    [SerializeField] private List<TriangleStateControl> triangles;
     [Header("Colours")]
     public Color color1 = Color.white;
     public Color color2 = Color.white;
     public Color color3 = Color.white;
 
+    [SerializeField] private TimerDisplay timer;
+
 
     private void Awake()
     {
-        foreach (var tri in triangles)
+        timer.OnTimerExpired += OnTimerExpired;
+
+        foreach (var tri in winConditions)
         {
-            tri.SetCornerColors(color1, color2, color3);
-            tri.OnRotationChanged += OnTriangleRotated;
+            tri.triangle.SetCornerColors(color1, color2, color3);
+            tri.triangle.OnRotationChanged += OnTriangleRotated;
+
+            tri.triangle.winCon = tri.winRotation;
+            tri.triangle.openingRotations = tri.openAtPos;
+
+            // IMPORTANT: evaluate AFTER data exists
+            tri.triangle.SetState(tri.triangleState);
+
+            tri.triangle.Initialize(
+                tri.triangleState,
+                tri.openAtPos
+            );
         }
+        CurrentState = LevelState.Playing;
     }
 
     private void OnDestroy()
     {
-        // foreach (var tri in triangles) { tri.OnRotationChanged -= OnTriangleRotated; }
+        if (timer != null) timer.OnTimerExpired -= OnTimerExpired;
     }
 
     private void OnTriangleRotated(TriangleStateControl changed)
     {
-        EvaluateLevel();
+        if (CurrentState != LevelState.Playing) return;
+        if (CheckWin()) HasWon();
     }
 
-    private void EvaluateLevel()
+
+
+    public bool CheckWin()
     {
-        // Put logic here
-
-
-        // all triangles at goal
-        foreach (var tri in triangles)
+        foreach (var condition in winConditions)
         {
-            if (!tri.IsAtGoal())
+            float target = (float)condition.winRotation;
+
+            if (Mathf.Abs(
+                Mathf.DeltaAngle(
+                    condition.triangle.CurrentRotation,
+                    target)) > 0.5f)
             {
-                tri.SetState(TriangleState.Active);
-                return;
+                return false;
             }
         }
 
-        // All satisfied
-        foreach (var tri in triangles)
-            tri.SetState(TriangleState.Done);
+        return true;
     }
 
     // ===================== ======================
     private void HasWon ()
     {
+        CurrentState = LevelState.Won;
+        timer.enabled = false;
+
+        Debug.Log(":]");
+
+        GameManager.instance.updateLvlCount(levelNumber);
+
+        GameManager.instance.LevelComplete();
         
     }
 
+    private void OnTimerExpired()
+    {
+        if (CurrentState != LevelState.Playing)
+            return;
 
+        HasLost();
+    }
+    private void HasLost()
+    {
+        CurrentState = LevelState.Lost;
 
-
+        Debug.Log("Game Over");
+        GameManager.instance.GameOver();
+    }
 
 }

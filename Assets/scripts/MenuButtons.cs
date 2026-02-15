@@ -7,8 +7,14 @@ public class MenuButtons : MonoBehaviour
 {
     public Animator menuAnimator;
     public Animator lvlSelectAnimator;
+    public Animator SettingsAnimator;
     public Animator transissionAnimation;
-    
+
+    private void Start()
+    {
+        transissionAnimation.updateMode = AnimatorUpdateMode.UnscaledTime;
+    }
+
 
 
     IEnumerator SwitchTo(GameState newState)
@@ -29,14 +35,22 @@ public class MenuButtons : MonoBehaviour
         StartCoroutine(SwitchToGame(lvl));
     }
 
+    public void NextGameBTN()
+    {
+        int currentLvl = GameManager.instance.currentLevel;
+        StartCoroutine(SwitchToGame(currentLvl + 1));
+    }
+
+    public void RetryGameBTN()
+    {
+        StartCoroutine(SwitchToGame(GameManager.instance.currentLevel));
+    }
+
+
     private IEnumerator SwitchToGame(int lvl)
     {
-        transissionAnimation.SetTrigger("TransTrigger");
-
-        yield return new WaitForSecondsRealtime(2f);
-
-        GameManager.instance.LoadLevel(lvl);
-        GameManager.instance.SetState(GameState.Playing);
+        yield return GameManager.instance
+            .ReloadLevel(lvl, transissionAnimation);
     }
 
 
@@ -45,17 +59,24 @@ public class MenuButtons : MonoBehaviour
         menuAnimator.SetTrigger("SlideOut");
         lvlSelectAnimator.SetTrigger("SlideIn");
     }
-
     public void BackFromLevelSelectBTN()
     {
         menuAnimator.SetTrigger("SlideIn");
         lvlSelectAnimator.SetTrigger("SlideOut");
     }
 
+
     public void SettingsBTN()
     {
-        Debug.Log("Play the animation trigger 'SlideIn' for the settings canvas");
+        menuAnimator.SetTrigger("SlideOut");
+        SettingsAnimator.SetTrigger("SlideIn");
     }
+    public void BackFromSettingsBTN()
+    {
+        menuAnimator.SetTrigger("SlideIn");
+        SettingsAnimator.SetTrigger("SlideOut");
+    }
+    
 
     public void QuitBTN()
     {

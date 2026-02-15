@@ -1,7 +1,10 @@
 using UnityEngine;
 
+
 public class TimerDisplay : MonoBehaviour
 {
+    public event System.Action OnTimerExpired;
+
     [SerializeField] private DigitController minTens;
     [SerializeField] private DigitController minOnes;
     [SerializeField] private DigitController secTens;
@@ -16,10 +19,13 @@ public class TimerDisplay : MonoBehaviour
         [SerializeField] private bool previewCountdown = true;
         [SerializeField] private int previewStartSeconds = 90;
         [Tooltip("6000 seconds are 99 minutes and 60 seconds which is the max")]
+        [SerializeField] private float expireDelay = 1f;
     #endif
 
     private float timeRemaining;
     private int lastShownTime = -1;
+    private bool timerReachedZero = false;
+    private float zeroReachedTime;
 
     private void Start()
     {
@@ -39,6 +45,20 @@ public class TimerDisplay : MonoBehaviour
 
         timeRemaining -= Time.deltaTime;
         timeRemaining = Mathf.Max(0, timeRemaining);
+
+        if (!timerReachedZero && timeRemaining <= 0f)
+        {
+            timerReachedZero = true;
+            zeroReachedTime = Time.time;
+            timeRemaining = 0f; // clamp visually
+        }
+
+        // wait before firing event
+        if (timerReachedZero && Time.time >= zeroReachedTime + expireDelay)
+        {
+            OnTimerExpired?.Invoke();
+            enabled = false;
+        }
 
         int secondsInt = Mathf.CeilToInt(timeRemaining);
 

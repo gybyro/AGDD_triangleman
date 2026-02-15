@@ -1,44 +1,62 @@
+using System.Collections.Generic;
 using UnityEngine;
 
+// Active = is clickable and will turn
+// Locked = is not clickable and will not rotate
+// Concom = not clickable but will rotate with others
 
-public enum TriangleState { Active, Locked, Done, Concom, ConDone }
-
+public enum TriangleState { Active, Concom, LockedClosed, LockedOpen }
+public enum PosibleRotations {
+    d0 = 0,
+    d60 = 60,
+    d120 = 120,
+    d180 = 180,
+    d240 = 240,
+    d300 = 300,
+}
 public enum TriangleCorner
 {
-    A = 0,
-    B = 1,
-    C = 2
+    southC = 0,
+    leftC = 1,
+    rightC = 2
 }
-
 
 public class TriangleStateControl : MonoBehaviour
 {
-    [Header("Triangle States")]
+    [Header("Triangle Sprites")]
     [SerializeField] private SpriteRenderer mainSpriteRenderer;
-    public SpriteRenderer northRenderer;
-    public SpriteRenderer nwRenderer;
-    public SpriteRenderer neRenderer;
-    public TriangleState state = TriangleState.Active;
+    [Header("Flaps")]
+    public SpriteRenderer northFlap;
+    public SpriteRenderer leftFlap;
+    public SpriteRenderer rightFlap;
+    [Header("Corners")]
+    public SpriteRenderer southCorner;
+    public SpriteRenderer leftCorner;
+    public SpriteRenderer rightCorner;
+
+    [Header("State stuff")]
+    public TriangleState state;
+    public PosibleRotations winCon;
 
     [Header("Corner Colours")]
-    public Color[] cornerColors = new Color[3];
+    public Color[] cornerColors = new Color[3]; // given by level control
+    public Color activeColor = Color.white;
+    public Color concomColor = Color.white;
 
-    public Color activeColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    public Color lockedColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    public Color concomColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    public Color doneColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-    
-    public float startRotation;
-    public float goalRotation;
+
+    // public float startRotation;
     public float CurrentRotation { get; private set; }
     public event System.Action<TriangleStateControl> OnRotationChanged;
 
     [Header("Opener triangles")]
     public bool isOpen = false;
-    // to get south,sw and se, just rotate the parent ower by 60 on z
-    public WPivotMover north;
-    public WPivotMover nw;
-    public WPivotMover ne;
+
+    // the pos the triangle will open at, get from level controller
+    public List<PosibleRotations> openingRotations;
+ 
+    public WPivotMover northWP;
+    public WPivotMover leftWP;
+    public WPivotMover rightWP;
 
     private const float ROTATION_EPSILON = 0.5f;
 
@@ -48,20 +66,23 @@ public class TriangleStateControl : MonoBehaviour
         if (mainSpriteRenderer == null)
             mainSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
+    public void Initialize(TriangleState initialState,List<PosibleRotations> openPositions)
+    {
+        openingRotations = openPositions;
+
+        // read scene rotation
+        CurrentRotation = Normalize(transform.eulerAngles.z);
+
+        SetState(initialState);
+        UpdateOpenerColor();
+    }
 
 
     void Start()
     {
- 
-        UpdateColor();
-        SetState(state);
-        SetRotation(startRotation);
-
-        // on level start, get this triangles start and goal rotations
-        // and apply them.
-        transform.rotation = Quaternion.Euler(0, 0, startRotation);
-        // currentRotation = startRotation;
-        
+        CornerColors();
+        // UpdateColor();
+        // SetState(state);     
     }
 
     void Update()
@@ -79,91 +100,91 @@ public class TriangleStateControl : MonoBehaviour
         state = newState;
         UpdateColor();
 
-
-
-        if ((newState == TriangleState.Done || newState == TriangleState.ConDone) && !isOpen)
+        if (IsOpeningRotation()) SetOpen();
+        else SetClose();
+    }
+    private bool IsOpeningRotation()
+    {
+        foreach (var rot in openingRotations)
         {
-
-            SetOpen();
+            // if (Mathf.Abs(CurrentRotation - (float)rot) < ROTATION_EPSILON)
+            //     return true;
+            if (Mathf.Abs(Mathf.DeltaAngle(CurrentRotation, (float)rot)) < ROTATION_EPSILON)
+                return true;
         }
-        else if ((newState != TriangleState.Done || newState != TriangleState.ConDone) && isOpen)
-        {
-            SetClose();
-        }
+        return false;
     }
 
-    public void SetRotation(float zRotation) {
+    public void SetRotation(float zRotation)
+    {
+        if (state == TriangleState.LockedClosed ||
+            state == TriangleState.LockedOpen)
+            return;
+
         CurrentRotation = Normalize(zRotation);
         transform.rotation = Quaternion.Euler(0, 0, CurrentRotation);
+
+        if (IsOpeningRotation()) SetOpen();
+        else SetClose();
 
         UpdateOpenerColor();
         OnRotationChanged?.Invoke(this); // tell the world 
     }
-    public float GetGoalRotation() { return Normalize(goalRotation); }
 
 
-    public bool CanRotate()
-    {
-        return state == TriangleState.Active || state == TriangleState.Done;
-        
-    }
-
+    public bool CanRotateOnClick() { return state == TriangleState.Active; }
     public void SetOpen()
     {
-        // set openers rotation if aplycaple
-        if (north) north.targetRotationx = 180f;
-        if (nw) { nw.targetRotationy = 180f; nw.targetRotationz = 60f; }
-        if (ne) { ne.targetRotationy = -180f; ne.targetRotationz = 300f; }
+        if (northWP) northWP.targetRotationx = 180f;
+        if (leftWP) { leftWP.targetRotationy = 180f; leftWP.targetRotationz = 60f; }
+        if (rightWP) { rightWP.targetRotationy = -180f; rightWP.targetRotationz = 300f; }
 
-        north?.PlayFlip();
-        nw?.PlayFlip();
-        ne?.PlayFlip();
+        northWP?.PlayFlip();
+        leftWP?.PlayFlip();
+        rightWP?.PlayFlip();
 
         isOpen = true;
     }
 
     public void SetClose()
     {
-        if (north) north.targetRotationx = 0f;
-        if (nw) { nw.targetRotationy = 0f; nw.targetRotationz = 120f; }
-        if (ne) { ne.targetRotationy = 0f; ne.targetRotationz = 240f; }
+        if (northWP) northWP.targetRotationx = 0f;
+        if (leftWP) { leftWP.targetRotationy = 0f; leftWP.targetRotationz = 120f; }
+        if (rightWP) { rightWP.targetRotationy = 0f; rightWP.targetRotationz = 240f; }
 
-        north?.PlayFlip();
-        nw?.PlayFlip();
-        ne?.PlayFlip();
+        northWP?.PlayFlip();
+        leftWP?.PlayFlip();
+        rightWP?.PlayFlip();
 
         isOpen = false;
-        
     }
 
-    public void SetCornerColors(Color c1, Color c2, Color c3)
+    public void CornerColors()
     {
-        cornerColors[0] = c1;
-        cornerColors[1] = c2;
-        cornerColors[2] = c3;
+        southCorner.color = cornerColors[0];
+        leftCorner.color = cornerColors[1];
+        rightCorner.color = cornerColors[2];
+    }
 
-        UpdateOpenerColor();
+     public void SetCornerColors(Color c0, Color c1, Color c2)
+    {
+        cornerColors[0] = c0;
+        cornerColors[1] = c1;
+        cornerColors[2] = c2;
+        CornerColors();
     }
 
     private void UpdateColor()
     {
-        
         switch(state)
         {
             case TriangleState.Active: mainSpriteRenderer.color = activeColor; break;
-            case TriangleState.Locked: mainSpriteRenderer.color = lockedColor; break;
             case TriangleState.Concom: mainSpriteRenderer.color = concomColor; break;
-            case TriangleState.Done: mainSpriteRenderer.color = doneColor; break;
+            case TriangleState.LockedClosed: SetClose(); Lock(); break;
+            case TriangleState.LockedOpen: SetOpen(); Lock(); break;
         }
     }
 
-    // changes later, im not sure what exactly the wincon is
-    public bool IsAtGoal()
-    {
-        return Mathf.Abs(
-            Mathf.DeltaAngle(CurrentRotation, GetGoalRotation())
-        ) <= ROTATION_EPSILON;
-    }
     private float Normalize(float angle) // normalizes ze angle
     {
         angle %= 360f;
@@ -190,9 +211,34 @@ public class TriangleStateControl : MonoBehaviour
         TriangleCorner up = GetUpCorner();
         Color c = cornerColors[(int)up];
 
-        if (northRenderer) northRenderer.color = c;
-        if (nwRenderer) nwRenderer.color = c;
-        if (neRenderer) neRenderer.color = c;
+        if (northFlap) northFlap.color = c;
+        if (leftFlap) leftFlap.color = c;
+        if (rightFlap) rightFlap.color = c;
+    }
+
+    public void Lock()
+    {// Locked triangles Are only 1 colour
+
+        if (cornerColors == null || cornerColors.Length < 3)
+        return;
+
+        // Determine colour based on orientation
+        TriangleCorner up = GetUpCorner();
+        Color lockColor = cornerColors[(int)up];
+
+        // Main body
+        if (mainSpriteRenderer)
+            mainSpriteRenderer.color = lockColor;
+
+        // Flaps
+        if (northFlap) northFlap.color = lockColor;
+        if (leftFlap)  leftFlap.color  = lockColor;
+        if (rightFlap) rightFlap.color = lockColor;
+
+        // Corners
+        if (southCorner) southCorner.color = lockColor;
+        if (leftCorner)  leftCorner.color  = lockColor;
+        if (rightCorner) rightCorner.color = lockColor;
     }
 
 }

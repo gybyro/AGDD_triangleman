@@ -30,6 +30,9 @@ public class PauseManager : MonoBehaviour
     public void Pause() {
 
         if (GameManager.instance.CurrentState == GameState.MainMenu) return;
+        if (IsPaused) return; // prevent double pause
+
+        IsPaused = true;
 
         pauseMenuUI.alpha = 1;
         pauseMenuUI.blocksRaycasts = true;
@@ -41,6 +44,9 @@ public class PauseManager : MonoBehaviour
     }
     
     public void Resume() {
+        if (!IsPaused) return; // prevent double resume
+        IsPaused = false;
+
         pauseAnimator.SetTrigger("Go");
 
         // hide AFTER animation finishes
@@ -62,8 +68,10 @@ public class PauseManager : MonoBehaviour
     {
         if (!context.performed) return;   // only trigger once per button push
 
-        if (IsPaused) Resume();
-        else Pause();
+        if (GameManager.instance.CurrentState == GameState.Paused)
+            Resume();
+        else
+            Pause();
     }
 
 
@@ -80,34 +88,22 @@ public class PauseManager : MonoBehaviour
         IsPaused = false;
     }
 
-    // private IEnumerator TransitionToMainMenu()
-    // {
-    //     IsPaused = true;
-
-    //     // Trigger transition animation
-    //     // transissionAnimation.SetTrigger("TransTrigger");
-
-    //     // Keep game paused while transition plays
-    //     // yield return new WaitForSecondsRealtime(2f); // use Realtime so Time.timeScale = 0 doesn't stop it
-
-    //     // Hide pause menu
-    //     pauseMenuUI.alpha = 0;
-    //     pauseMenuUI.blocksRaycasts = false;
-    //     pauseMenuUI.interactable = false;
-
-    //     // Switch to main menu state
-    //     GameManager.instance.SetState(GameState.MainMenu);
-
-    //     // Optional: reset pause flag
-    //     IsPaused = false;
-    // }
-
-
     public void QuitBTN()
     {
         Application.Quit();
         Debug.Log("Quit called! (This won't close the editor)");
         
+    }
+
+    public void GameOverDown() {
+
+        if (GameManager.instance.CurrentState == GameState.MainMenu) return;
+
+        pauseMenuUI.alpha = 1;
+        pauseMenuUI.blocksRaycasts = true;
+        pauseMenuUI.interactable = true;
+        
+        pauseAnimator.SetTrigger("Pause");
     }
 
     

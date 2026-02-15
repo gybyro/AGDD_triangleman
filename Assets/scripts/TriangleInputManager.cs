@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 
 public class TriangleInputManager : MonoBehaviour
 {
+    private System.Action<InputAction.CallbackContext> leftClickHandler;
+    private System.Action<InputAction.CallbackContext> rightClickHandler;
+
     [SerializeField] private InputActionReference leftClick;
     [SerializeField] private InputActionReference rightClick;
     [SerializeField] private float rotationStep = 60f;
@@ -21,8 +24,8 @@ public class TriangleInputManager : MonoBehaviour
 
     private void Awake()
     {
-        polyCollider = GetComponent<PolygonCollider2D>();
-        stateControl = GetComponent<TriangleStateControl>();
+        polyCollider = GetComponentInChildren<PolygonCollider2D>();
+        stateControl = GetComponentInChildren<TriangleStateControl>();
         mainCam = Camera.main;
 
     }
@@ -30,16 +33,26 @@ public class TriangleInputManager : MonoBehaviour
     private void Start()
     {
         // Initialize targetRotation
-        targetRotation = stateControl.startRotation;
+        // targetRotation = stateControl.startRotation;
     }
 
+    // private void OnEnable()
+    // {
+    //     leftClick.action.performed +=_=> TryRotate(rotationStep);
+    //     rightClick.action.performed +=_=> TryRotate(-rotationStep);
+
+    //     leftClick.action.Enable();
+    //     rightClick.action.Enable();
+
+    //     TriangleRotationEvents.OnActiveTriangleRotated += OnOtherTriangleRotated;
+    // }
     private void OnEnable()
     {
-        // leftClick.action.performed += OnLeftClick;
-        // rightClick.action.performed += OnRightClick;
+        leftClickHandler = OnLeftClick;
+        rightClickHandler = OnRightClick;
 
-        leftClick.action.performed +=_=> TryRotate(rotationStep);
-        rightClick.action.performed +=_=> TryRotate(-rotationStep);
+        leftClick.action.performed += leftClickHandler;
+        rightClick.action.performed += rightClickHandler;
 
         leftClick.action.Enable();
         rightClick.action.Enable();
@@ -49,18 +62,37 @@ public class TriangleInputManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // leftClick.action.performed -= OnLeftClick;
-        // rightClick.action.performed -= OnRightClick;
+        if (leftClick != null)
+            leftClick.action.performed -= leftClickHandler;
 
-        leftClick.action.Disable();
-        rightClick.action.Disable();
+        if (rightClick != null)
+            rightClick.action.performed -= rightClickHandler;
 
         TriangleRotationEvents.OnActiveTriangleRotated -= OnOtherTriangleRotated;
     }
 
 
+    // private void OnDisable()
+    // {
+    //     leftClick.action.Disable();
+    //     rightClick.action.Disable();
+
+    //     TriangleRotationEvents.OnActiveTriangleRotated -= OnOtherTriangleRotated;
+    // }
+
+    private void OnLeftClick(InputAction.CallbackContext ctx)
+    { TryRotate(rotationStep); }
+
+    private void OnRightClick(InputAction.CallbackContext ctx)
+    { TryRotate(-rotationStep); }
+
+
     private bool MouseOverThis()
     {
+        if (polyCollider == null || mainCam == null)
+            return false;
+
+
         Vector2 mouseWorldPos =
             mainCam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
@@ -74,7 +106,7 @@ public class TriangleInputManager : MonoBehaviour
         targetRotation += delta;
 
         // acrivates the concom event   vvv
-        if (stateControl.CanRotate())
+        if (stateControl.CanRotateOnClick())
             TriangleRotationEvents.OnActiveTriangleRotated?.Invoke(delta);
 
         // Start rotation if not already running
@@ -85,8 +117,10 @@ public class TriangleInputManager : MonoBehaviour
     private void TryRotate(float delta)
     {
         if (!MouseOverThis()) return;
-        if (GameManager.instance.CurrentState != GameState.Playing) return;
-        if (!stateControl.CanRotate()) return;
+        if (GameManager.instance == null ||
+            GameManager.instance.CurrentState != GameState.Playing)
+            return;
+        if (!stateControl.CanRotateOnClick()) return;
 
         RotateRequest(delta);
     }
@@ -138,11 +172,5 @@ public class TriangleInputManager : MonoBehaviour
         }
 
         isRotating = false;
-
-        // Check goal
-        if (stateControl.IsAtGoal()) {
-            if (stateControl.state == TriangleState.Concom) { stateControl.SetState(TriangleState.ConDone); }
-            else stateControl.SetState(TriangleState.Done);
-        }
     }
 }
