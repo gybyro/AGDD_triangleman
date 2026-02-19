@@ -4170,6 +4170,8 @@ GameObject:
   - component: {fileID: 371240321}
   - component: {fileID: 371240323}
   - component: {fileID: 371240322}
+  - component: {fileID: 371240324}
+  - component: {fileID: 371240325}
   m_Layer: 0
   m_Name: Music Audio
   m_TagString: Untagged
@@ -4199,15 +4201,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371240320}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed85d4923b09b5743a60a626411d9d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WhistleAmbient
   source: {fileID: 371240323}
-  originalClip: {fileID: 8300000, guid: cc5bccaf325e9af4da746873bcd8a8ae, type: 3}
-  startTime: 0.22
-  duration: 0.015
+  whistleClip: {fileID: 8300000, guid: cc5bccaf325e9af4da746873bcd8a8ae, type: 3}
+  minStart: 0.2
+  maxStart: 1.2
+  sliceLength: 0.4
+  loopStart: 0.263
+  loopEnd: 0.292
+  basePitch: 0.3
+  pitchDriftAmount: 0
+  pitchDriftSpeed: 0
+  pitchRange: {x: 0.9, y: 1.1}
+  delayRange: {x: 0.2, y: 1.2}
 --- !u!82 &371240323
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4220,7 +4230,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 1488135880144196561, guid: 9a73e7fdb8487ab49bdf9260a92fb2f3, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -4305,6 +4315,47 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &371240324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371240320}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 064f4a056d273914f98b6ff3b2d3a784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DronePlayer
+  originalClip: {fileID: 8300000, guid: cc5bccaf325e9af4da746873bcd8a8ae, type: 3}
+  sliceStart: 0.036
+  sliceDuration: 0.04
+  noteFrequencies:
+  - 440
+  - 261.63
+  - 440
+  - 261.63
+  - 440
+  - 261.63
+  - 440
+  - 261.63
+  - 440
+  - 261.63
+  - 440
+  noteChangeInterval: 1
+  originalFrequency: 440
+--- !u!114 &371240325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371240320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53caa82a47156a84da35c56099a14dbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DroneSynth
 --- !u!1001 &383795341
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17468,7 +17519,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1728936144}
   - component: {fileID: 1728936143}
-  - component: {fileID: 1728936142}
   - component: {fileID: 1728936145}
   m_Layer: 0
   m_Name: Audio
@@ -17477,22 +17527,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1728936142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728936141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed85d4923b09b5743a60a626411d9d0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WhistleAmbient
-  source: {fileID: 1728936143}
-  originalClip: {fileID: 8300000, guid: cc5bccaf325e9af4da746873bcd8a8ae, type: 3}
-  startTime: 0.2
-  duration: 0.015
 --- !u!82 &1728936143
 AudioSource:
   m_ObjectHideFlags: 0
