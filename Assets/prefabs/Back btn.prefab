@@ -9999,9 +9999,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: WhistleAmbient, Assembly-CSharp
-        m_MethodName: PlayWhistle
+      - m_Target: {fileID: 7756421813644200019, guid: 3b2cc3d9f8d842643ab5960802f5ed9d, type: 3}
+        m_TargetAssemblyTypeName: UIVolumeController, Assembly-CSharp
+        m_MethodName: PlayUIWhistle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
