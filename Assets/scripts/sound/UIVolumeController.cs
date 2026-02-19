@@ -12,9 +12,14 @@ public class UIVolumeController : MonoBehaviour
     
 
 
+    // public void PlayUIWhistle()
+    // {
+    //     PlaySlice(startTime, duration);
+    // }
     public void PlayUIWhistle()
     {
-        PlaySlice(startTime, duration);
+        if (source != null && source.enabled)
+            source.PlayOneShot(originalClip, 0.2f); // 0.2 = volume
     }
 
     public void PlaySlice(float startTime, float duration)

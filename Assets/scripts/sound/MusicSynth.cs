@@ -4,6 +4,7 @@ using System.IO;
 
 public class MusicSynth : MonoBehaviour
 {
+    public static MusicSynth instance;
     
     const int sampleRate = 44100;
 
@@ -21,18 +22,55 @@ public class MusicSynth : MonoBehaviour
 
     float bpm = 120f;
 
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
-        LoadSong("theme");
-        AudioSettings.outputSampleRate.Equals(sampleRate);
+        // LoadSong("saltkjot_og_baunir");
+        // AudioSettings.outputSampleRate.Equals(sampleRate);
+    }
+    public void Stop()
+    {
+        notes.Clear();
+        currentNote = 0;
+        noteTime = 0;
+        phase = 0;
+    }
+    public void PlaySong(string songName)
+    {
+        Stop();
+
+        LoadSong(songName);
     }
 
     // -------------------------
     // LOAD TEXT FILE
     // -------------------------
-    void LoadSong(string fileName)
+    public void LoadSong(string fileName)
     {
-        string path = Path.Combine(Application.streamingAssetsPath, fileName + ".txt");
+        // string path = Path.Combine(Application.streamingAssetsPath, fileName + ".txt");
+        // string[] lines = File.ReadAllLines(path);
+        string path = Path.Combine(
+            Application.streamingAssetsPath,
+            fileName + ".txt"
+        );
+
+        if (!File.Exists(path))
+        {
+            Debug.LogError("Song not found: " + path);
+            return;
+        }
+
         string[] lines = File.ReadAllLines(path);
 
         bpm = float.Parse(lines[1]);

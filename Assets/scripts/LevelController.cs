@@ -104,7 +104,7 @@ public class LevelController : MonoBehaviour
 
         Debug.Log(":]");
 
-        GameManager.instance.updateLvlCount(levelNumber);
+        GameManager.instance.UpdateLvlCount(levelNumber);
 
         GameManager.instance.LevelComplete();
         

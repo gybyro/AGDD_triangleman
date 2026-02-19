@@ -10,6 +10,14 @@ public enum GameState
     LevelEnding
 }
 
+// LEVELSSS
+[System.Serializable]
+public class LevelData
+{
+    public GameObject levelPrefab;
+    public string songFile;
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -21,12 +29,13 @@ public class GameManager : MonoBehaviour
     private GameObject currentLevelInstance;
     
     [SerializeField] private Transform levelContainer;
-    [SerializeField] private List<GameObject> levelPrefabs;
+    [SerializeField] private List<LevelData> levels;
 
     public GameObject mainMenuRoot;
     public GameObject puzzleRoot;
 
     public DropdownManager dropdownManager;
+    public Animator transissionAnimation;
 
 
     void Awake()
@@ -56,6 +65,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
 
                 if (currentLevelInstance != null) Destroy(currentLevelInstance);
+                MusicSynth.instance.PlaySong("menu_music");
                 break;
 
             case GameState.Playing:
@@ -71,6 +81,7 @@ public class GameManager : MonoBehaviour
 
             case GameState.Paused:
                 Time.timeScale = 0f;
+                MusicSynth.instance.Stop();
                 break;
 
             case GameState.LevelEnding:
@@ -82,6 +93,25 @@ public class GameManager : MonoBehaviour
 
     // ========== LEVELS ========================================
 
+     private IEnumerator SwitchToGame(int lvl)
+    {
+        yield return GameManager.instance
+            .ReloadLevel(lvl, transissionAnimation);
+    }
+
+    public void StartLevel(int lvl)
+    {
+        // if (index > players_highest_lvl)
+        // {
+        //     Debug.Log("Level locked");
+        //     return;
+        // }
+
+        // LoadLevel(index);
+        // SetState(GameState.Playing);
+        StartCoroutine(SwitchToGame(lvl));
+    }
+
     public void LoadLevel(int index)
     {
         levelEnding = false;
@@ -89,18 +119,23 @@ public class GameManager : MonoBehaviour
         if (currentLevelInstance != null)
             Destroy(currentLevelInstance);
 
-        if (index < 0 || index >= levelPrefabs.Count)
+        if (index < 0 || index >= levels.Count)
         {
             Debug.LogError("Invalid level index");
             return;
         }
 
         currentLevel = index;
-        currentLevelInstance = Instantiate(levelPrefabs[index], levelContainer);
+        LevelData data = levels[index];
+
+        currentLevelInstance = Instantiate(data.levelPrefab, levelContainer);
+
+        MusicSynth.instance.PlaySong(levels[index].songFile);
     }
 
 
-    public void updateLvlCount(int completedLevel)
+
+    public void UpdateLvlCount(int completedLevel)
     {
         int unlockedLevel = completedLevel + 1;
 
@@ -115,6 +150,7 @@ public class GameManager : MonoBehaviour
 
     public int GetPlayersHighestLevel()
     {
+        players_highest_lvl = PlayerPrefs.GetInt("PlayerLevel", 0);
         return players_highest_lvl;
     }
 
