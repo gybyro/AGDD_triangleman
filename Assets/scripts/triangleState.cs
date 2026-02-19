@@ -5,7 +5,7 @@ using UnityEngine;
 // Locked = is not clickable and will not rotate
 // Concom = not clickable but will rotate with others
 
-public enum TriangleState { Active, Concom, LockedClosed, LockedOpen }
+public enum TriangleState { Active, Concom, Concom2, LockedClosed, LockedOpen }
 public enum PosibleRotations {
     d0 = 0,
     d60 = 60,
@@ -117,9 +117,9 @@ public class TriangleStateControl : MonoBehaviour
 
     public void SetRotation(float zRotation)
     {
-        if (state == TriangleState.LockedClosed ||
-            state == TriangleState.LockedOpen)
-            return;
+        // if (state == TriangleState.LockedClosed ||
+        //     state == TriangleState.LockedOpen)
+        //     return;
 
         CurrentRotation = Normalize(zRotation);
         transform.rotation = Quaternion.Euler(0, 0, CurrentRotation);
@@ -229,6 +229,9 @@ public class TriangleStateControl : MonoBehaviour
         // Main body
         if (mainSpriteRenderer)
             mainSpriteRenderer.color = lockColor;
+
+        SetCornerColors(lockColor, lockColor, lockColor);
+        CornerColors();
 
         // Flaps
         if (northFlap) northFlap.color = lockColor;
