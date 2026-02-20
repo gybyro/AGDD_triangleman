@@ -26,13 +26,17 @@ public class TimerDisplay : MonoBehaviour
     private bool timerReachedZero = false;
     private float zeroReachedTime;
 
+
     private void Start()
     {
-        #if UNITY_EDITOR
-            if (previewCountdown)
-                timeRemaining = previewStartSeconds;
-        #endif
+        timeRemaining = previewStartSeconds;
+
+    #if UNITY_EDITOR
+        if (!previewCountdown)
+            enabled = false;
+    #endif
     }
+    
 
     // updates every second
     private void Update()
