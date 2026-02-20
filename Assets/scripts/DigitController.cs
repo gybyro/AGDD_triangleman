@@ -163,7 +163,6 @@ public class DigitController : MonoBehaviour
     };
 
 
-    #if UNITY_EDITOR
     [Header("Play Mode Preview")]
     [SerializeField] private bool animateInPlayMode = true;
     [SerializeField] private int playModePreviewDigit = 0;
@@ -323,5 +322,4 @@ public class DigitController : MonoBehaviour
             cell.SetVisible(false);
     }
 
-#endif
 }

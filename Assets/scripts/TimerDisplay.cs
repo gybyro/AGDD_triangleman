@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class TimerDisplay : MonoBehaviour
 {
     public event System.Action OnTimerExpired;
@@ -14,13 +13,13 @@ public class TimerDisplay : MonoBehaviour
     [SerializeField] private DigitController milThree;
 
 
-    #if UNITY_EDITOR
+    
         [Header("Play Mode Preview")]
         [SerializeField] private bool previewCountdown = true;
         [SerializeField] private int previewStartSeconds = 90;
         [Tooltip("6000 seconds are 99 minutes and 60 seconds which is the max")]
         [SerializeField] private float expireDelay = 1f;
-    #endif
+  
 
     private float timeRemaining;
     private int lastShownTime = -1;

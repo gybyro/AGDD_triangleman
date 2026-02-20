@@ -132,9 +132,9 @@ MonoBehaviour:
     winRotation: 120
     openAtPos: 78000000
     triangleState: 0
-  color1: {r: 0.7294118, g: 0.3333333, b: 0.8274511, a: 1}
-  color2: {r: 0.4980392, g: 1, b: 0.8313726, a: 1}
-  color3: {r: 1, g: 0.627451, b: 0.4784314, a: 1}
+  color1: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  color2: {r: 0.5176471, g: 0.4392157, b: 1, a: 1}
+  color3: {r: 0.1803922, g: 0.5450981, b: 0.3411765, a: 1}
   timer: {fileID: 9051127760987531162}
 --- !u!1001 &275958490636263316
 PrefabInstance:
