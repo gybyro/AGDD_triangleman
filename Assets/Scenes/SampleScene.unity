@@ -4259,7 +4259,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -10992,6 +10992,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2632242080115984257, guid: c9d0a5a239fc26e4dbe9b366a0d57955, type: 3}
+      propertyPath: levelIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3891317716709339555, guid: c9d0a5a239fc26e4dbe9b366a0d57955, type: 3}
       propertyPath: m_Name
       value: Lvl selection btn 3
@@ -11502,7 +11506,9 @@ MonoBehaviour:
   - levelPrefab: {fileID: 5067483068083475191, guid: 31b8addbbdbca4d42a6d378818b0c32d, type: 3}
     songFile: theme
   - levelPrefab: {fileID: 5067483068083475191, guid: dfaca37ab5844194c807e97eec365ed2, type: 3}
-    songFile: mystery
+    songFile: lagtrain
+  - levelPrefab: {fileID: 5067483068083475191, guid: dfaca37ab5844194c807e97eec365ed2, type: 3}
+    songFile: lagtrain
   mainMenuRoot: {fileID: 121798812}
   puzzleRoot: {fileID: 1365999540}
   dropdownManager: {fileID: 1126528738}

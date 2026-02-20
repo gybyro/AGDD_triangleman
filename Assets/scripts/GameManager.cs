@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
 
                 if (currentLevelInstance != null) Destroy(currentLevelInstance);
-                MusicSynth.instance.PlaySong("menu_music");
+                // MusicSynth.instance.PlaySong("menu_music");
                 break;
 
             case GameState.Playing:

@@ -411,7 +411,7 @@ MonoBehaviour:
   leftClick: {fileID: 2180140683676061095, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rightClick: {fileID: 5306444027562118277, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rotationStep: 60
-  rotationDuration: 0.2
+  rotationDuration: 0.1
   rotationCurve:
     serializedVersion: 2
     m_Curve:
